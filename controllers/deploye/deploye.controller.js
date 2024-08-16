@@ -3,7 +3,8 @@ import jwt from "jsonwebtoken";
 import { generateSlug } from "random-word-slugs";
 import { ECSClient, RunTaskCommand } from "@aws-sdk/client-ecs";
 import { isValidGitUrl } from "../../utils/checkGitUrlValid.js";
-
+import dotenv from "dotenv";
+dotenv.config();
 // constant ecs client data
 const ecsClient = new ECSClient({
   region: "ap-south-1",
@@ -23,7 +24,7 @@ export async function deployeController(req, res) {
   try {
     //   extract data from request
     const { gitURL, slug, buildFolder, token } = req.body;
-
+    console.log({ gitURL, slug, buildFolder, token });
     // check data is exist or not
     if (!token || !gitURL || !buildFolder) {
       return res.status(400).json({ error: "Invalid data." });
@@ -40,6 +41,7 @@ export async function deployeController(req, res) {
       //   check git url is valid
       return res.status(400).json({ error: "Invalid git url" });
     }
+
 
     // verify token
     const decodedData = jwt.verify(token, process.env.SECRET_KEY);
@@ -100,8 +102,11 @@ export async function deployeController(req, res) {
       },
     });
 
+     console.log(ecsClient, config);
+    console.log("final setp");
     await ecsClient.send(command);
 
+    console.log("project is deployed -->", projectSlug);
     // Check if the projectSlug already exists for the user
     const existingProject = user.projects.find(
       (proj) => proj.slug === projectSlug
@@ -117,6 +122,7 @@ export async function deployeController(req, res) {
 
     return res.status(200).json({ message: "project deploying", projectSlug });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: error.message });
   }
 }

@@ -48,7 +48,7 @@ async function initRedisSubscribe() {
   subscriber.psubscribe("logs:*");
   console.log("Subscribed to logs....");
   subscriber.on("pmessage", (pattern, channel, message) => {
-    console.log(channel, "----->", message);final
+    console.log(channel, "----->", message);
     io.to(channel).emit("message", message);
   });
 }
