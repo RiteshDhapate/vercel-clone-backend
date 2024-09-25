@@ -7,7 +7,7 @@ import dotenv from "dotenv";
 dotenv.config();
 // constant ecs client data
 const ecsClient = new ECSClient({
-  region: "ap-south-1",
+  region: "ap-southeast-2",
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -81,17 +81,17 @@ export async function deployeController(req, res) {
         awsvpcConfiguration: {
           assignPublicIp: "ENABLED",
           subnets: [
-            "subnet-0234f3f7981ea9546",
-            "subnet-06448890ff9c17443",
-            "subnet-0788a5429d8978766",
+            "subnet-0c114492780e3fde0",
+            "subnet-0b972653388168cc8",
+            "subnet-04a3d9a2505a09d4c",
           ],
-          securityGroups: ["sg-0d2aa244f91c13160"],
+          securityGroups: ["sg-0def51d442fc38ad7"],
         },
       },
       overrides: {
         containerOverrides: [
           {
-            name: "vercel-clone-main-image",
+            name: "image-url",
             environment: [
               { name: "GIT_REPOSITORY__URL", value: gitURL },
               { name: "PROJECT_ID", value: projectSlug },
